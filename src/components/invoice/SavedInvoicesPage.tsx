@@ -82,7 +82,7 @@ export default function SavedInvoicesPage({ onBack }: Props) {
   useEffect(() => { fetchInvoices(); }, []);
 
   const isEmailSent = (inv: SavedInvoice) => {
-    const status = (inv.emailStatus || '').toLowerCase().trim();
+    const status = String(inv.emailStatus || '').toLowerCase().trim();
     return status === 'yes' || status === 'sent' || status === 'true';
   };
 
@@ -325,7 +325,9 @@ export default function SavedInvoicesPage({ onBack }: Props) {
                       <tbody className="divide-y">
                         {(() => {
                           try {
-                            const items = JSON.parse(selectedInvoice.items || '[]');
+                            const items = typeof selectedInvoice.items === 'string'
+                              ? JSON.parse(selectedInvoice.items || '[]')
+                              : (Array.isArray(selectedInvoice.items) ? selectedInvoice.items : []);
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             return items.map((item: any, i: number) => (
                               <tr key={i} className="hover:bg-muted/20">
@@ -363,8 +365,10 @@ export default function SavedInvoicesPage({ onBack }: Props) {
                     <h4 className="font-semibold text-sm">Bank Details</h4>
                     {(() => {
                       try {
-                        const bank = JSON.parse(selectedInvoice.bankDetails || '{}');
-                        return bank.bankName ? (
+                        const bank = typeof selectedInvoice.bankDetails === 'string'
+                          ? JSON.parse(selectedInvoice.bankDetails || '{}')
+                          : (typeof selectedInvoice.bankDetails === 'object' ? selectedInvoice.bankDetails : {});
+                        return (bank && typeof bank === 'object' && 'bankName' in bank && bank.bankName) ? (
                           <div className="bg-muted/40 p-3 rounded text-sm space-y-1">
                             <p><span className="text-muted-foreground">Bank:</span> {bank.bankName}</p>
                             <p><span className="text-muted-foreground">Account:</span> {bank.accountName}</p>

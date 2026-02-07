@@ -150,9 +150,21 @@ export default function HistoryPage({ onBack }: Props) {
               <p className="text-center text-muted-foreground py-10">No saved invoices found matching filter.</p>
             ) : (
               filteredInvoices.map((inv, i) => {
-                const items = (() => { try { return JSON.parse(inv.items || '[]'); } catch { return []; } })();
-                const bank = (() => { try { return JSON.parse(inv.bankDetails || '{}'); } catch { return {}; } })();
-                const isSent = inv.emailStatus === 'yes';
+                const items = (() => {
+                  try {
+                    if (typeof inv.items === 'string') return JSON.parse(inv.items || '[]');
+                    if (Array.isArray(inv.items)) return inv.items;
+                    return [];
+                  } catch { return []; }
+                })();
+                const bank = (() => {
+                  try {
+                    if (typeof inv.bankDetails === 'string') return JSON.parse(inv.bankDetails || '{}');
+                    if (typeof inv.bankDetails === 'object' && inv.bankDetails !== null) return inv.bankDetails;
+                    return {};
+                  } catch { return {}; }
+                })();
+                const isSent = String(inv.emailStatus || '').toLowerCase() === 'yes';
 
                 return (
                   <div key={i} className="glass-panel rounded-lg p-4 space-y-3">
