@@ -53,27 +53,27 @@ export default function SavedInvoicesPage({ onBack }: Props) {
         raw = [];
       }
       const arr = Array.isArray(raw) ? raw : [];
-      setInvoices(arr.map((r: any) => ({
-        invoiceNumber: r.invoiceNumber || '',
-        clientName: r.clientName || '',
-        total: r.total || 0,
-        date: r.invoiceDate || '',
+      setInvoices(arr.filter(Boolean).map((r: any) => ({
+        invoiceNumber: r?.invoiceNumber || '',
+        clientName: r?.clientName || '',
+        total: r?.total || 0,
+        date: r?.invoiceDate || '',
         status: '',
-        pdfUrl: typeof r.imageUrl === 'string' && r.imageUrl.startsWith('http') ? r.imageUrl : undefined,
-        clientEmail: r.clientEmail || r.clientemail || '',
-        emailStatus: r.gmailStatus || r.gmailstatus || 'no',
-        clientAddress: r.clientAddress || '',
-        clientVAT: r.clientVAT || '',
-        shipToAddress: r.shipToAddress || '',
-        dueDate: r.dueDate || '',
-        lpoNo: r.lpoNo || '',
-        lpoDate: r.lpoDate || '',
-        paymentTerms: r.paymentTerms || '',
-        subtotal: r.subtotal || 0,
-        taxAmount: r.taxAmount || 0,
-        notes: r.notes || '',
-        items: r.items || '[]',
-        bankDetails: r.bankDetails || '{}',
+        pdfUrl: typeof r?.imageUrl === 'string' && r.imageUrl.startsWith('http') ? r.imageUrl : undefined,
+        clientEmail: r?.clientEmail || r?.clientemail || '',
+        emailStatus: r?.gmailStatus || r?.gmailstatus || 'no',
+        clientAddress: r?.clientAddress || '',
+        clientVAT: r?.clientVAT || '',
+        shipToAddress: r?.shipToAddress || '',
+        dueDate: r?.dueDate || '',
+        lpoNo: r?.lpoNo || '',
+        lpoDate: r?.lpoDate || '',
+        paymentTerms: r?.paymentTerms || '',
+        subtotal: r?.subtotal || 0,
+        taxAmount: r?.taxAmount || 0,
+        notes: r?.notes || '',
+        items: r?.items || '[]',
+        bankDetails: r?.bankDetails || '{}',
       })));
     } catch { setInvoices([]); }
     setLoading(false);

@@ -58,7 +58,8 @@ export default function DashboardPage({ onBack }: Props) {
     }, []);
 
     // filtering
-    const filteredData = data.filter(item => {
+    const safeData = data.filter(Boolean);
+    const filteredData = safeData.filter(item => {
         const date = item.invoiceDate || '';
         const invNo = (item.invoiceNumber || '').toLowerCase();
         const query = searchQuery.toLowerCase();
