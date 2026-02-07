@@ -37,7 +37,14 @@ export default function DashboardPage({ onBack }: Props) {
         setLoading(true);
         try {
             const res = await fetch(WEBHOOKS.FETCH_INVOICES);
-            const json = await res.json();
+            const text = await res.text();
+            let json;
+            try {
+                json = JSON.parse(text);
+            } catch (e) {
+                console.error('Failed to parse dashboard JSON:', text.slice(0, 100));
+                json = [];
+            }
             setData(Array.isArray(json) ? json : []);
         } catch (err) {
             console.error('Failed to fetch data', err);

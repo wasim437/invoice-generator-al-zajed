@@ -30,21 +30,30 @@ export default function SendEmailDialog({ invoice, open, onOpenChange, onSent }:
       return;
     }
     setSending(true);
+
+    const payload = {
+      invoiceNumber: invoice.invoiceNumber,
+      to: emailTo,
+      subject: emailSubject,
+      message: emailMessage,
+      pdfUrl: invoice.pdfUrl,
+    };
+
+    console.log('Sending Email Payload:', payload);
+
     try {
       const res = await fetch(WEBHOOKS.SEND_EMAIL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          invoiceNumber: invoice.invoiceNumber,
-          to: emailTo,
-          subject: emailSubject,
-          message: emailMessage,
-          pdfUrl: invoice.pdfUrl,
-        }),
+        body: JSON.stringify(payload),
       });
 
+      console.log('Send Email Response Status:', res.status);
+
       if (!res.ok) {
-        throw new Error('Email send failed');
+        const errorData = await res.text();
+        console.error('Email send failed details:', errorData);
+        throw new Error(`Email send failed: ${res.status} ${errorData}`);
       }
 
       try {
@@ -64,9 +73,13 @@ export default function SendEmailDialog({ invoice, open, onOpenChange, onSent }:
 
       toast({ title: 'Sent!', description: `Invoice emailed to ${emailTo}.` });
       onSent();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Send email error:', error);
-      toast({ title: 'Error', description: 'Failed to send email.', variant: 'destructive' });
+      toast({
+        title: 'Error',
+        description: `Failed to send email. ${error.message || ''}`,
+        variant: 'destructive'
+      });
     } finally {
       setSending(false);
     }

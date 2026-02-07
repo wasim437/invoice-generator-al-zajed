@@ -30,7 +30,14 @@ export default function HistoryPage({ onBack }: Props) {
     setLoading(true);
     try {
       const res = await fetch(WEBHOOKS.FETCH_INVOICES);
-      const raw = await res.json();
+      const text = await res.text();
+      let raw;
+      try {
+        raw = JSON.parse(text);
+      } catch (e) {
+        console.error('Failed to parse invoices JSON:', text.slice(0, 100));
+        raw = [];
+      }
       const arr = Array.isArray(raw) ? raw : [];
       setInvoices(arr.map((r: any) => ({
         invoiceNumber: r.invoiceNumber || '',
@@ -62,7 +69,14 @@ export default function HistoryPage({ onBack }: Props) {
     setLoading(true);
     try {
       const res = await fetch(WEBHOOKS.FETCH_EMAILS);
-      const data = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error('Failed to parse emails JSON:', text.slice(0, 100));
+        data = [];
+      }
       setEmails(Array.isArray(data) ? data : []);
     } catch { setEmails([]); }
     setLoading(false);

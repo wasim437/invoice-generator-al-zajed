@@ -33,15 +33,15 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card sticky top-0 z-50">
-        <div className="max-w-[1800px] mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={alZajedLogo} alt="Logo" className="w-10 h-10 object-contain" />
-            <div>
-              <h1 className="font-display font-bold text-lg text-foreground leading-tight">Invoice Generator</h1>
-              <p className="text-xs text-muted-foreground">Al Zajed Technologies</p>
+        <div className="max-w-[1800px] mx-auto px-4 py-2 md:py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 md:gap-3">
+            <img src={alZajedLogo} alt="Logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+            <div className="hidden xs:block">
+              <h1 className="font-display font-bold text-sm md:text-lg text-foreground leading-tight">Invoice Generator</h1>
+              <p className="text-[10px] md:text-xs text-muted-foreground">Al Zajed Technologies</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 md:gap-2">
             <InvoiceActions
               invoice={invoiceData.invoice}
               style={style}
@@ -63,26 +63,29 @@ const Index = () => {
             >
               <LayoutDashboard className="w-5 h-5" />
             </button>
-
           </div>
         </div>
       </header>
 
       {/* Mobile tab switcher */}
-      <div className="md:hidden flex border-b border-border bg-card">
+      <div className="md:hidden flex border-b border-border bg-muted/50 p-1">
         <button
           onClick={() => setMobileTab('edit')}
-          className={`flex-1 py-3 text-sm font-medium text-center transition-colors ${mobileTab === 'edit' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground'
+          className={`flex-1 flex items-center justify-center py-2 text-xs font-semibold rounded-md transition-all ${mobileTab === 'edit'
+              ? 'bg-card text-primary shadow-sm ring-1 ring-border'
+              : 'text-muted-foreground hover:bg-muted'
             }`}
         >
-          <FileText className="w-4 h-4 inline mr-1" /> Editor
+          <FileText className="w-3.5 h-3.5 mr-1.5" /> Editor
         </button>
         <button
           onClick={() => setMobileTab('preview')}
-          className={`flex-1 py-3 text-sm font-medium text-center transition-colors ${mobileTab === 'preview' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground'
+          className={`flex-1 flex items-center justify-center py-2 text-xs font-semibold rounded-md transition-all ${mobileTab === 'preview'
+              ? 'bg-card text-primary shadow-sm ring-1 ring-border'
+              : 'text-muted-foreground hover:bg-muted'
             }`}
         >
-          <Eye className="w-4 h-4 inline mr-1" /> Preview
+          <Eye className="w-3.5 h-3.5 mr-1.5" /> Preview
         </button>
       </div>
 

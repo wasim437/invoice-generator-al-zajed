@@ -49,20 +49,29 @@ export default function InvoiceActions({ invoice, style, subtotal, taxAmount, to
     setSaving(true);
     try {
       // Duplicate Check
-      const checkRes = await fetch(WEBHOOKS.FETCH_INVOICES);
-      if (checkRes.ok) {
-        const existingInvoices = await checkRes.json();
-        if (Array.isArray(existingInvoices)) {
-          const isDuplicate = existingInvoices.some((inv: any) =>
-            (inv.invoiceNumber || '').trim().toLowerCase() === (invoice.invoiceNumber || '').trim().toLowerCase()
-          );
-          if (isDuplicate) {
-            if (!confirm(`An invoice with number "${invoice.invoiceNumber}" already exists. Do you want to save it anyway?`)) {
-              setSaving(false);
-              return;
+      try {
+        const checkRes = await fetch(WEBHOOKS.FETCH_INVOICES);
+        if (checkRes.ok) {
+          const text = await checkRes.text();
+          try {
+            const existingInvoices = JSON.parse(text);
+            if (Array.isArray(existingInvoices)) {
+              const isDuplicate = existingInvoices.some((inv: any) =>
+                (inv.invoiceNumber || '').trim().toLowerCase() === (invoice.invoiceNumber || '').trim().toLowerCase()
+              );
+              if (isDuplicate) {
+                if (!confirm(`An invoice with number "${invoice.invoiceNumber}" already exists. Do you want to save it anyway?`)) {
+                  setSaving(false);
+                  return;
+                }
+              }
             }
+          } catch (e) {
+            console.warn('Could not parse invoices list as JSON:', text.slice(0, 100));
           }
         }
+      } catch (err) {
+        console.warn('Duplicate check fetch failed:', err);
       }
 
       const element = document.getElementById('invoice-preview');
@@ -89,15 +98,31 @@ export default function InvoiceActions({ invoice, style, subtotal, taxAmount, to
         bankDetails: JSON.stringify(invoice.bankDetails),
         invoiceImage: imageBase64,
       };
+
+      console.log('Saving Invoice Payload:', payload);
+
       const res = await fetch(WEBHOOKS.SAVE_INVOICE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error('Save failed');
+
+      console.log('Save Invoice Response Status:', res.status);
+
+      if (!res.ok) {
+        const errorData = await res.text();
+        console.error('Save failed details:', errorData);
+        throw new Error(`Save failed: ${res.status} ${errorData}`);
+      }
+
       toast({ title: 'Saved to Google Sheets!', description: 'Invoice saved, PDF generated & uploaded to Drive.' });
-    } catch {
-      toast({ title: 'Error', description: 'Failed to save invoice.', variant: 'destructive' });
+    } catch (error: any) {
+      console.error('Save invoice error:', error);
+      toast({
+        title: 'Error',
+        description: `Failed to save invoice. ${error.message || ''}`,
+        variant: 'destructive'
+      });
     } finally {
       setSaving(false);
     }

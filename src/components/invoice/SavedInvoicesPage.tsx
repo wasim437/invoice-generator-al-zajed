@@ -44,7 +44,14 @@ export default function SavedInvoicesPage({ onBack }: Props) {
     setLoading(true);
     try {
       const res = await fetch(WEBHOOKS.FETCH_INVOICES);
-      const raw = await res.json();
+      const text = await res.text();
+      let raw;
+      try {
+        raw = JSON.parse(text);
+      } catch (e) {
+        console.error('Failed to parse invoices JSON:', text.slice(0, 100));
+        raw = [];
+      }
       const arr = Array.isArray(raw) ? raw : [];
       setInvoices(arr.map((r: any) => ({
         invoiceNumber: r.invoiceNumber || '',
