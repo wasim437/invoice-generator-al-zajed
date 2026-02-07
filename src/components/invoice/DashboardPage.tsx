@@ -76,7 +76,7 @@ export default function DashboardPage({ onBack }: Props) {
     const totalInvoices = filteredData.length;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const avgInvoiceValue = totalInvoices > 0 ? totalRevenue / totalInvoices : 0;
-    const sentCount = filteredData.filter(d => (d.gmailStatus || '').toLowerCase() === 'yes').length;
+    const sentCount = filteredData.filter(d => String(d?.gmailStatus || d?.gmailstatus || '').toLowerCase() === 'yes').length;
     const sentRate = totalInvoices > 0 ? (sentCount / totalInvoices) * 100 : 0;
 
     // chart data preparation

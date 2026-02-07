@@ -2,6 +2,12 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
+// Global error handler to help debug white screen
+window.onerror = function (message, source, lineno, colno, error) {
+    console.error('GLOBAL ERROR:', message, 'at', source, lineno, colno, error);
+    return false;
+};
+
 // Register Service Worker for PWA
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
