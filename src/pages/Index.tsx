@@ -36,9 +36,9 @@ const Index = () => {
         <div className="max-w-[1800px] mx-auto px-4 py-2 md:py-3 flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-3">
             <img src={alZajedLogo} alt="Logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
-            <div className="hidden xs:block">
-              <h1 className="font-display font-bold text-sm md:text-lg text-foreground leading-tight">Invoice Generator</h1>
-              <p className="text-[10px] md:text-xs text-muted-foreground">Al Zajed Technologies</p>
+            <div className="flex flex-col">
+              <h1 className="font-display font-bold text-xs xs:text-sm md:text-lg text-foreground leading-tight">Invoice Automation</h1>
+              <p className="text-[9px] xs:text-[10px] md:text-xs text-muted-foreground">Al Zajed Technologies</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5 md:gap-2">
@@ -72,8 +72,8 @@ const Index = () => {
         <button
           onClick={() => setMobileTab('edit')}
           className={`flex-1 flex items-center justify-center py-2 text-xs font-semibold rounded-md transition-all ${mobileTab === 'edit'
-              ? 'bg-card text-primary shadow-sm ring-1 ring-border'
-              : 'text-muted-foreground hover:bg-muted'
+            ? 'bg-card text-primary shadow-sm ring-1 ring-border'
+            : 'text-muted-foreground hover:bg-muted'
             }`}
         >
           <FileText className="w-3.5 h-3.5 mr-1.5" /> Editor
@@ -81,8 +81,8 @@ const Index = () => {
         <button
           onClick={() => setMobileTab('preview')}
           className={`flex-1 flex items-center justify-center py-2 text-xs font-semibold rounded-md transition-all ${mobileTab === 'preview'
-              ? 'bg-card text-primary shadow-sm ring-1 ring-border'
-              : 'text-muted-foreground hover:bg-muted'
+            ? 'bg-card text-primary shadow-sm ring-1 ring-border'
+            : 'text-muted-foreground hover:bg-muted'
             }`}
         >
           <Eye className="w-3.5 h-3.5 mr-1.5" /> Preview
